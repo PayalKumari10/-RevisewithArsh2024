@@ -1,0 +1,54 @@
+import java.util.Random;
+
+class Solution {
+    private int m, n;
+    private int totalZeros;
+    private int[][] matrix;
+    private Random random;
+
+    public Solution(int m, int n) {
+        this.m = m;
+        this.n = n;
+        this.totalZeros = m * n;
+        this.matrix = new int[m][n];
+        this.random = new Random();
+    }
+
+    public int[] flip() {
+        int rand = random.nextInt(totalZeros--);
+        int originalRand = rand;
+
+        // Convert the random index to matrix coordinates
+        int row = 0;
+        for (; row < m; row++) {
+            if (rand < n) {
+                break;
+            }
+            rand -= n;
+        }
+
+        int col = rand;
+
+        // Swap the chosen element with the last zero in the matrix
+        swap(row, col, m - 1, totalZeros % n);
+        return new int[]{row, col};
+    }
+
+    public void reset() {
+        totalZeros = m * n;
+    }
+
+    private void swap(int r1, int c1, int r2, int c2) {
+        int temp = matrix[r1][c1];
+        matrix[r1][c1] = matrix[r2][c2];
+        matrix[r2][c2] = temp;
+    }
+}
+
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(m, n);
+ * int[] param_1 = obj.flip();
+ * obj.reset();
+ */
