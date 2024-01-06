@@ -1,0 +1,22 @@
+class Solution {
+    public int findTheWinner(int n, int k) {
+        // Create a list to represent the circle of friends
+        List<Integer> friends = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            friends.add(i);
+        }
+
+        int index = 0;
+
+        // Eliminate friends until only one remains
+        while (friends.size() > 1) {
+            // Find the next friend to eliminate
+            index = (index + k - 1) % friends.size();
+            // Remove the friend from the circle
+            friends.remove(index);
+        }
+
+        // The last remaining friend is the winner
+        return friends.get(0);
+    }
+}
