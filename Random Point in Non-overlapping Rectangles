@@ -1,0 +1,57 @@
+import java.util.Random;
+
+class Solution {
+    int[][] rects;
+    int[] prefixSums;
+    Random random;
+
+    public Solution(int[][] rects) {
+        this.rects = rects;
+        this.prefixSums = new int[rects.length];
+        int totalPoints = 0;
+
+        // Calculate the total number of integer points covered by all rectangles
+        for (int i = 0; i < rects.length; i++) {
+            int area = (rects[i][2] - rects[i][0] + 1) * (rects[i][3] - rects[i][1] + 1);
+            totalPoints += area;
+            prefixSums[i] = totalPoints;
+        }
+
+        this.random = new Random();
+    }
+
+    public int[] pick() {
+        int randomPoint = random.nextInt(prefixSums[prefixSums.length - 1]) + 1;
+
+        // Binary search to find the rectangle that covers the randomly chosen point
+        int left = 0, right = rects.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (prefixSums[mid] < randomPoint) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        // Get the chosen rectangle
+        int[] rectangle = rects[left];
+
+        // Generate a random point within the chosen rectangle
+        int x = random.nextInt(rectangle[2] - rectangle[0] + 1) + rectangle[0];
+        int y = random.nextInt(rectangle[3] - rectangle[1] + 1) + rectangle[1];
+
+        return new int[]{x, y};
+    }
+
+    public static void main(String[] args) {
+        int[][] rectangles = {{-2, -2, 1, 1}, {2, 2, 4, 6}};
+        Solution solution = new Solution(rectangles);
+
+        System.out.println(Arrays.toString(solution.pick())); // Return [1, -2]
+        System.out.println(Arrays.toString(solution.pick())); // Return [1, -1]
+        System.out.println(Arrays.toString(solution.pick())); // Return [-1, -2]
+        System.out.println(Arrays.toString(solution.pick())); // Return [-2, -2]
+        System.out.println(Arrays.toString(solution.pick())); // Return [0, 0]
+    }
+}
