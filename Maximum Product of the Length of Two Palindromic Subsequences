@@ -1,0 +1,47 @@
+ class Solution {
+    public int maxProduct(String s) {
+        int n = s.length();
+        int[] masks = new int[1 << n];
+        Arrays.fill(masks, -1);
+
+        // Generate all subsequences and store the bitmask for each palindrome
+        for (int mask = 1; mask < (1 << n); mask++) {
+            StringBuilder subsequence = new StringBuilder();
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) {
+                    subsequence.append(s.charAt(i));
+                }
+            }
+            if (isPalindrome(subsequence.toString())) {
+                masks[mask] = mask;
+            }
+        }
+
+        int maxProduct = 0;
+
+        // Iterate through all pairs of subsequences and find the maximum product
+        for (int mask1 = 0; mask1 < (1 << n); mask1++) {
+            for (int mask2 = 0; mask2 < (1 << n); mask2++) {
+                if ((masks[mask1] & masks[mask2]) == 0) {
+                    int product = Integer.bitCount(masks[mask1]) * Integer.bitCount(masks[mask2]);
+                    maxProduct = Math.max(maxProduct, product);
+                }
+            }
+        }
+
+        return maxProduct;
+    }
+
+    private boolean isPalindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+        
+    }
+}
