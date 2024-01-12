@@ -1,0 +1,39 @@
+class Solution {
+    final int MOD = 1_000_000_007;
+    int[] pr = {2,3,5,7,11,13,17,19,23,29};
+    int[] dp = new int[1<<10], tp = new int[1<<10];
+    public int squareFreeSubsets(int[] nums) {
+        dp[0]=0;
+        int b;
+        for(int n:nums){
+            b = toBit(n);
+            if(b<0)continue;
+            tp[b]++; tp[b]%=MOD;
+            for(int i=0; i< 1<<10; i++){
+                if((b&i)>0)continue;
+                tp[(b|i)]+=dp[i];
+                tp[(b|i)]%=MOD;
+            }
+
+            for(int i=0; i< 1<<10; i++){
+                dp[i] += tp[i]; dp[i]%=MOD;
+                tp[i]=0;
+            }
+        }
+        int ans=0;
+        for(int n:dp){
+            ans+=n; ans%=MOD;
+        }
+        return ans;
+    }
+    private int toBit(int n){
+        int r=0;
+        for(int i=0; i<10; i++){
+            if(n%pr[i]==0){
+                r+=1<<i; n/=pr[i];
+                if(n%pr[i]==0)return -1;
+            }
+        }
+        return r;
+    }
+}
