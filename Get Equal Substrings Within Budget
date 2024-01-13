@@ -1,0 +1,31 @@
+ class Solution {
+    public int equalSubstring(String s, String t, int maxCost) {
+        int[] costArray = new int[s.length()];
+        
+        // Calculate the cost array
+        for (int i = 0; i < s.length(); i++) {
+            costArray[i] = Math.abs(s.charAt(i) - t.charAt(i));
+        }
+        
+        int maxLength = 0;
+        int currentCost = 0;
+        int start = 0;
+        
+        // Use a sliding window to find the maximum length
+        for (int end = 0; end < s.length(); end++) {
+            currentCost += costArray[end];
+            
+            // If the current cost exceeds maxCost, move the window start pointer
+            while (currentCost > maxCost) {
+                currentCost -= costArray[start];
+                start++;
+            }
+            
+            // Update maxLength
+            maxLength = Math.max(maxLength, end - start + 1);
+        }
+        
+        return maxLength;
+    
+    }
+}
