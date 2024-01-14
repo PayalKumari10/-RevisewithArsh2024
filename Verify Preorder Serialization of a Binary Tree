@@ -1,0 +1,16 @@
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String[] nodes = preorder.split(",");
+        int indeg = 0, outdeg = 1;
+        for (String node : nodes) {
+            indeg++;
+            if (outdeg - indeg < 0) {
+                return false;
+            }
+            if (!node.equals("#")) { // Fix typo: "euqla" to "equals"
+                outdeg += 2;
+            }
+        }
+        return outdeg - indeg == 0;
+    }
+}
