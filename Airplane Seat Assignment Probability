@@ -1,0 +1,22 @@
+class Solution {
+    public double nthPersonGetsNthSeat(int n) {
+        // If there's only one person, the probability is 1.
+        if (n == 1) {
+            return 1.0;
+        }
+        
+        // Initialize the dp array to store probabilities.
+        double[] dp = new double[n + 1];
+        
+        // The first person always gets their own seat.
+        dp[1] = 1.0;
+        
+        // Iterate from the second person to the nth person.
+        for (int i = 2; i <= n; i++) {
+            -1]).
+            dp[i] = 1.0 / i + (i - 2) * dp[i - 1] / i;
+        }
+        
+        return dp[n];
+    }
+}
