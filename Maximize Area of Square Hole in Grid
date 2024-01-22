@@ -1,0 +1,37 @@
+class Solution {
+    public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
+        // sort hBars and vBars in ascending order
+        Arrays.sort(hBars);
+        Arrays.sort(vBars);
+
+        // find max consecutive horizontal bars
+        int maxContHorizontalBars = 1;
+        int currContHorizontalBars = 1;
+
+        for (int i = 0; i < hBars.length - 1; i++) {
+            if (hBars[i] + 1 == hBars[i + 1]) // consecutive bar
+                currContHorizontalBars++;
+            else
+                currContHorizontalBars = 1;
+            maxContHorizontalBars = Math.max(maxContHorizontalBars, currContHorizontalBars);
+        }
+
+        // find max consecutive vertical bars
+        int maxContVerticalBars = 1;
+        int currContVerticalBars = 1;
+
+        for (int i = 0; i < vBars.length - 1; i++) {
+            if (vBars[i] + 1 == vBars[i + 1]) // consecutive bar
+                currContVerticalBars++;
+            else
+                currContVerticalBars = 1;
+            maxContVerticalBars = Math.max(maxContVerticalBars, currContVerticalBars);
+        }
+
+        // gap created will be +1 of consecutive bars
+        // and square side will be min of horizonal and vertical gap as both side must be equal
+        int squareSide = Math.min(maxContHorizontalBars, maxContVerticalBars) + 1;
+        return squareSide * squareSide;
+    
+    }
+}
