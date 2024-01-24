@@ -1,0 +1,70 @@
+ class Solution {
+    private static final int MOD = 1_000_000_007;
+    private List<Integer> prime;
+    private int[] mp;
+    private long[][] dp;
+
+    public Solution() {
+        prime = new ArrayList<>();
+        mp = new int[45];
+        dp = new long[31][1 << 12];
+    }
+
+    public int numberOfGoodSubsets(int[] nums) {
+        Arrays.stream(dp).forEach(row -> Arrays.fill(row, -1));
+        for (int i = 2; i <= 30; i++) {
+            if (find(i)) {
+                prime.add(i);
+            }
+        }
+        for (int num : nums) {
+            mp[num]++;
+        }
+        long val = find(2, 0) % MOD;
+        long one = 1;
+        for (int i = 0; i < mp[1]; i++) {
+            one = (one * 2) % MOD;
+        }
+        val = (val * one) % MOD;
+        return (int) val;
+    }
+
+    private boolean find(int n) {
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private long find(int value, int mask) {
+        if (value > 30) {
+            return (mask > 0) ? 1 : 0;
+        }
+        if (dp[value][mask] != -1) {
+            return dp[value][mask] % MOD;
+        }
+        int newMask = 0;
+        long product = 1;
+        for (int i = 0; i < prime.size(); i++) {
+            if ((value % prime.get(i)) == 0) {
+                product *= prime.get(i);
+                newMask |= (1 << i);
+            }
+        }
+        long ans = find(value + 1, mask);
+        if (product == value && mp[value] > 0 && ((mask & newMask) == 0)) {
+            ans += (find(value + 1, mask | newMask) * mp[value]);
+        }
+        return dp[value][mask] = ans % MOD;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+
+        // Test case
+        int[] nums = {2, 3, 5, 7, 11, 13};
+        System.out.println(solution.numberOfGoodSubsets(nums)); // Output: 127
+    }
+}
