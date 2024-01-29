@@ -1,0 +1,67 @@
+class Solution {
+    public int minDays(int[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        int numIslands = countIslands(grid);
+        
+        if (numIslands != 1) {
+            // If there are 0 or more than 1 islands, the grid is already disconnected.
+            return 0;
+        }
+
+        // Iterate through each land cell (1) and check if changing it to water creates a new island.
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 1) {
+                    grid[i][j] = 0;
+                    int newNumIslands = countIslands(grid);
+                    grid[i][j] = 1; // Restore the original value
+
+                    if (newNumIslands != 1) {
+                        // If changing this land cell creates a new island, return 1.
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        // If changing any land cell did not create a new island, return 2.
+        return 2;
+    }
+
+    private int countIslands(int[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+        int count = 0;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 1 && !visited[i][j]) {
+                    count++;
+                    dfs(grid, i, j, visited);
+                }
+            }
+        }
+
+        return count;
+    }
+
+    private void dfs(int[][] grid, int row, int col, boolean[][] visited) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        if (row < 0 || row >= rows || col < 0 || col >= cols || grid[row][col] == 0 || visited[row][col]) {
+            return;
+        }
+
+        visited[row][col] = true;
+
+        // Perform DFS in all 4 directions
+        dfs(grid, row + 1, col, visited);
+        dfs(grid, row - 1, col, visited);
+        dfs(grid, row, col + 1, visited);
+        dfs(grid, row, col - 1, visited);
+    }
+}
