@@ -1,0 +1,56 @@
+class WordDictionary {
+    static class Trie {
+        Trie[] child = new Trie[26];
+        boolean isEnd = false;
+    }
+    Trie root;
+
+    public WordDictionary() {
+        root = new Trie();
+        
+    }
+    
+    public void addWord(String word) {
+        Trie cur = root;
+        for(char ch : word.toCharArray()) {
+            int pos = ch - 'a';
+            if(cur.child[pos] == null){
+                cur.child[pos]  = new Trie();
+            }
+            cur = cur.child[pos];
+        }
+        cur.isEnd = true;
+        
+    }
+    
+    public boolean search(String word) {
+        Trie cur = root;
+        return find(word, 0 , cur);
+        
+    }
+    private boolean find(String word, int idx, Trie cur){
+        if(idx == word.length()){
+            return cur.isEnd;
+        }
+        if(word.charAt(idx) == '.'){
+            for(int i = 0; i < 26; ++i){
+                if(cur.child[i] != null && find(word, idx + 1, cur.child[i])) {
+                    return true;
+                }
+            }
+        }  else {
+            int i = word.charAt(idx) - 'a';
+            if(cur.child[i] != null && find(word, idx + 1, cur.child[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */
